@@ -43,3 +43,8 @@ comparison is claimed.
 
 Generated pkg/Wasm, Rust target output, dependencies, and browser artifacts are
 not durable source. No output molecular structure is checked in.
+
+## Remote verification
+
+GitHub Actions run 42651542440 passed the native Rust suite, all 94 Wasm tests,
+the clean source-built browser package, and the UFF/L-BFGS lmwebtest scenario.
