@@ -27,7 +27,7 @@ testfoss/browser.lms`; complete server/tool setup is in `AGENTS.md` and
 `testfoss/README.md`.
 
 The exact toolchain is Rust 1.99.1, wasm-pack 0.15.0, Binaryen version_133, and
-Node.js 24. Browser tools are lmctl 0.2.426, Playwright 1.63.0, and lmwebtest
+Node.js 24. Browser tools are lmctl 0.2.469, Playwright 1.63.0, and lmwebtest
 v0.1.10 at commit `2920befd355eacc654697820d690db074e94dce3` (Linux x64
 SHA-256 `b90cb79fc2b00627da226e563f77a395fedcb95aca01b076af8ff14755009690`).
 The `.lms` uses `cli="lmwebtest playwright"` directly.

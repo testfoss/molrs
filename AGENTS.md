@@ -22,7 +22,7 @@ Their SHA-256 values are recorded in durable memory. Do not check in
   (v2.90.3), `actions/checkout@11d5960a326750d5838078e36cf38b85af677262`
   (v4.4.0), and `actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020`
   (v4.4.0).
-- `@lmctl-ai/lmctl` `0.2.426`; Playwright `1.63.0`; lmwebtest `v0.1.10`, commit
+- `@lmctl-ai/lmctl` `0.2.469`; Playwright `1.63.0`; lmwebtest `v0.1.10`, commit
   `2920befd355eacc654697820d690db074e94dce3`, Linux x64 SHA-256
   `b90cb79fc2b00627da226e563f77a395fedcb95aca01b076af8ff14755009690`.
 
