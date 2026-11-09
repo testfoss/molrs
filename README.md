@@ -194,3 +194,18 @@ BSD-3-Clause — see [LICENSE](LICENSE).
 <div align="center">
 <sub>Crafted with 💚 by <a href="https://github.com/MolCrafts">MolCrafts</a></sub>
 </div>
+
+## Testfoss demonstration fork
+
+The `testfoss-demo` branch adds the molecular browser lab's source-built molrs
+Wasm scenario without changing upstream Rust or bindings. The additive page
+checks local structure I/O, neighbor analysis, official ethanol UFF typing,
+finite force-field evaluation, and L-BFGS optimization. See
+[testfoss/README.md](testfoss/README.md) for the complete native/Wasm/browser
+commands and [AGENTS.md](AGENTS.md) for exact pins and lab provenance.
+
+`.github/workflows/testfoss.yml` runs Rust tests, Wasm tests, generates
+`testfoss/pkg` from this checkout, and drives UFF/L-BFGS checks through
+`lmwebtest playwright`. Generated Wasm, Cargo output, dependencies, and browser
+artifacts are not checked in. Native molecular dynamics is not exported by
+`molrs-wasm` and is outside this browser scenario.

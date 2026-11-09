@@ -1,0 +1,13 @@
+{
+  "name": "testfoss-molrs",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Additive source-built Wasm browser checks for the Testfoss molrs fork",
+  "scripts": {
+    "browsers:install": "playwright install chromium",
+    "test:browser": "lmscript browser.lms"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}

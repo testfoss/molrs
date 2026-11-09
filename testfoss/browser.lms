@@ -1,0 +1,67 @@
+# Run after generating testfoss/pkg and starting testfoss/server.py at the repository root.
+let base_url = env("TESTFOSS_URL", "http://127.0.0.1:8000");
+
+program = _lmcode_ cli="lmwebtest playwright";
+let launch_options = "{}";
+if (pw.env("TESTFOSS_CHROMIUM") != "") {
+  launch_options = "{\"executablePath\":\"" + pw.env("TESTFOSS_CHROMIUM") + "\"}";
+}
+let b = pw.launch("chromium", launch_options);
+let p = b.new_page();
+p.set_default_timeout(120000);
+p.goto(pw.env("TESTFOSS_URL") + "/testfoss/");
+p.locator("#status").expect("toHaveText", "[\"WebAssembly ready\"]");
+
+p.click("#load");
+p.locator("#status").expect("toHaveText", "[\"Complete\"]");
+$return.loaded = json_parse(p.text_content("#results"));
+p.click("#evaluate");
+p.locator("#status").expect("toHaveText", "[\"Complete\"]");
+$return.evaluated = json_parse(p.text_content("#results"));
+p.click("#optimize");
+p.locator("#status").expect("toHaveText", "[\"Complete\"]");
+$return.optimized = json_parse(p.text_content("#results"));
+$return.pageErrors = p.page_errors();
+$return.console = p.console_log();
+b.close();
+end _lmcode_
+
+let res = run_lmcode(program, {command: ["lmwebtest", "playwright", "--lmcode", "$DSLFILE"]});
+let stats = {pass: 0, fail: 0};
+fn check(condition, name, detail) {
+  if (condition) {
+    stats["pass"] = stats.get("pass", 0) + 1;
+    println(f"[PASS] {name}: {detail}");
+  } else {
+    stats["fail"] = stats.get("fail", 0) + 1;
+    println(f"[FAIL] {name}: {detail}");
+  }
+}
+check(res.get("ok", false), "lmcode run", "molrs UFF/L-BFGS program completed");
+if (!res.get("ok", false)) {
+  println(json_stringify(res));
+  exit(1);
+}
+let r = res.get("result", {});
+let loaded = r.get("loaded", {});
+let evaluated = r.get("evaluated", {});
+let optimized = r.get("optimized", {});
+let official = loaded.get("officialTwoAtomAssertions", {});
+let evaluation = evaluated.get("evaluation", {});
+let officialUff = evaluation.get("officialAssertion", {});
+let optimization = optimized.get("optimization", {});
+check(loaded.get("fixture", "") == "ethanol", "stock fixture", loaded.get("fixture", ""));
+check(loaded.get("structure", {}).get("atomCount", 0) == 9, "SDF atom count", str(loaded.get("structure", {}).get("atomCount", 0)));
+check(official.get("neighborPairs", 0) == 1, "official neighbor assertion", str(official.get("neighborPairs", 0)));
+check(evaluation.get("forcefield", "") == "UFF", "force-field selection", evaluation.get("forcefield", ""));
+check(officialUff.get("passed", false), "official UFF typing", officialUff.get("reference", ""));
+check(officialUff.get("C_3", 0) == 2 && officialUff.get("O_3", 0) == 1, "ethanol UFF atom types", json_stringify(officialUff));
+check(evaluation.get("forceCount", 0) == 27, "UFF force vector", str(evaluation.get("forceCount", 0)));
+check(optimization.get("algorithm", "") == "L-BFGS", "optimizer selection", optimization.get("algorithm", ""));
+check(optimization.get("nSteps", 0) > 0, "L-BFGS steps", str(optimization.get("nSteps", 0)));
+check(optimization.get("maxAbsCoordinateChangeAngstrom", 0) > 0.00000001, "L-BFGS coordinates", "optimization changed coordinates");
+check(r.get("pageErrors", "") == "[]", "browser page errors", r.get("pageErrors", ""));
+println(f"molrs browser integration: {stats.pass} passed, {stats.fail} failed");
+if (stats.fail > 0) {
+  exit(1);
+}

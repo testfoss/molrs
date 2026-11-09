@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>molrs WASM quickstart</title>
+  <style>
+    :root { color-scheme: light; font-family: system-ui, sans-serif; }
+    body { max-width: 1050px; margin: 0 auto; padding: 2rem; color: #172033; background: #f6f8fc; }
+    main { background: white; border: 1px solid #dce3ef; border-radius: 12px; padding: 1.5rem; }
+    h1 { margin-top: 0; }
+    .scope { border-left: 4px solid #3568c0; padding: .75rem 1rem; background: #edf3ff; }
+    .controls { display: flex; flex-wrap: wrap; gap: .75rem; align-items: end; margin: 1.25rem 0; }
+    label { display: grid; gap: .3rem; font-weight: 600; }
+    select, button { font: inherit; padding: .55rem .75rem; }
+    button { cursor: pointer; }
+    button:disabled { cursor: wait; opacity: .55; }
+    #status { font-weight: 650; }
+    #status[data-status="error"] { color: #a11111; }
+    #status[data-status="ready"], #status[data-status="complete"] { color: #17643a; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #111a29; color: #d8e7ff; padding: 1rem; border-radius: 8px; min-height: 14rem; }
+    small { color: #536078; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>molrs WASM quickstart</h1>
+    <p class="scope"><strong>Source-built scope:</strong> local structure I/O, neighbor analysis, UFF/MMFF evaluation, and L-BFGS geometry optimization. Native molecular dynamics is <strong>not</strong> exported by <code>molrs-wasm</code>.</p>
+    <p>Upstream <code>aa4c935c3d8f7f31a33df21df2bcf118fbdd973d</code>; Rust 1.99.1; wasm-pack 0.15.0; <code>--target web</code>.</p>
+    <div class="controls">
+      <label>Local SDF fixture
+        <select id="fixture">
+          <option value="ethanol">Ethanol — official UFF typing fixture</option>
+          <option value="ethane">Ethane — official MMFF typing fixture</option>
+        </select>
+      </label>
+      <label>Force field
+        <select id="forcefield">
+          <option value="uff">UFF</option>
+          <option value="mmff">MMFF94</option>
+        </select>
+      </label>
+      <button id="load" type="button" disabled>Load fixture / analyze</button>
+      <button id="evaluate" type="button" disabled>Evaluate energy</button>
+      <button id="optimize" type="button" disabled>Optimize with L-BFGS</button>
+    </div>
+    <p id="status" role="status" data-status="loading">Loading source-built WebAssembly…</p>
+    <pre id="results" data-testid="results">No fixture loaded.</pre>
+    <small>All inputs are checked-in strings or UTF-8 bytes. No network compute service is used.</small>
+  </main>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
