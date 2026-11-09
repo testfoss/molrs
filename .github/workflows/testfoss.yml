@@ -17,13 +17,12 @@ defaults:
   run:
     shell: bash
 
-env:
-  CARGO_TARGET_DIR: ${{ runner.temp }}/testfoss-molrs-target
-
 jobs:
   rust-wasm-browser:
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    env:
+      CARGO_TARGET_DIR: ${{ runner.temp }}/testfoss-molrs-target
     steps:
       - name: Check out the additive fork
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
